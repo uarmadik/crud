@@ -1,0 +1,24 @@
+{
+  "name": "Test CRUD/test crud",
+  "description": "Try to develop simple CRUD project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ihor Harmider",
+      "email": "uarmadik@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "twig/twig": "^3.0@dev"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "app\\core\\": "app/core",
+      "app\\models\\": "app/models",
+      "app\\controllers\\": "app/controllers",
+      "Twig\\" : "vendor/twig/src/"
+    }
+  }
+}

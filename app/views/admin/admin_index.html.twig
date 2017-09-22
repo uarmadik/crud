@@ -1,0 +1,38 @@
+{% extends "admin_template.html.twig" %}
+{% block title %}
+    Main page
+{% endblock %}
+
+
+{% block content %}
+    {% if session %}
+        <div class="alert">
+            <p>{{ session.alert }}</p>
+        </div>
+    {% endif %}
+
+    <a href="/admin/create" class="btn">Create post</a>
+    {% if parameters %}
+        <table cellspacing="0">
+            <tr>
+                <th>id</th>
+                <th>Header</th>
+                <th>Text</th>
+                <th>Control</th>
+            </tr>
+        {% for post in parameters %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td>{{ post.header }}</td>
+                <td>{{ post.text }}</td>
+                <td>
+                    <a href="../admin/edit/{{ post.id }}" class="btn">Edit</a>
+                    <a href="../admin/delete/{{ post.id }}" class="btn">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
+
+{% endblock %}

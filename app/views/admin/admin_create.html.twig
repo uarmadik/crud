@@ -1,0 +1,15 @@
+{% extends "admin_template.html.twig" %}
+{% block title %}
+    Create new post
+{% endblock %}
+
+{% block content %}
+
+    <form action="/" method="POST">
+        <input type="hidden" name="action" value="create">
+        <input type="text" name='header' placeholder="Header">
+        <textarea name='text' cols="30" rows="10" placeholder="Content ..."></textarea>
+        <input type="submit" value="Create">
+    </form>
+
+{% endblock %}

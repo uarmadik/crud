@@ -1,0 +1,21 @@
+{% extends "template.html.twig" %}
+{% block title %}
+    Main page
+{% endblock %}
+
+{% block content %}
+    <h2>Main view</h2>
+    <div class="main-content_wrap">
+
+     {% if parameters %}
+         {% for post in parameters %}
+             <div class="post">
+                <p>id: {{ post.id }}</p>
+                <h2>{{ post.header }}</h2>
+                <p>{{ post.text }}</p>
+             </div>
+         {% endfor %}
+     {% endif %}
+
+    </div>
+{% endblock %}

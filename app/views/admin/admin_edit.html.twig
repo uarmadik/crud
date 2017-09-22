@@ -1,0 +1,16 @@
+{% extends "admin_template.html.twig" %}
+{% block title %}
+    Edit post
+{% endblock %}
+
+{% block content %}
+
+    <form action="/" method="POST">
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="id" value="{{ parameters.id }}">
+        <input type="text" name='header' placeholder="Header" value="{{ parameters.header }}">
+        <textarea name='text' cols="30" rows="10" placeholder="Content ...">{{ parameters.text }}</textarea>
+        <input type="submit" value="Save change">
+    </form>
+
+{% endblock %}
