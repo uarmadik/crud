@@ -76,6 +76,10 @@ body {
         background-color: #b1dbb1;
         font: normal 1.2em sans-serif;
     }
+    .alert-error {
+        color: darkred;
+        background-color: #edafaf;
+    }
 
 /* create form */
 

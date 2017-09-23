@@ -5,9 +5,13 @@
 
 
 {% block content %}
-    {% if session %}
+    {% if session.alert %}
         <div class="alert">
             <p>{{ session.alert }}</p>
+        </div>
+    {% elseif session.alert_error %}
+        <div class="alert alert-error">
+            <p>{{ session.alert_error }}</p>
         </div>
     {% endif %}
 
