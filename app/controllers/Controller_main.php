@@ -18,18 +18,11 @@ class Controller_main
         ['id'=>'6','header'=>'header 6', 'text'=>'text 6'],
     ];
 
-
-    public function __construct()
-    {
-        //echo 'I am Controller_main! =)';
-    }
     public function index()
     {
-        //echo 'controller main - index';
         $db = new models\Model_posts();
         $posts = $db->getAllPosts();
-        //var_dump($posts);
-        //die();
+
         $view = new View();
         $view->generate('main_view.html.twig', $posts);
     }

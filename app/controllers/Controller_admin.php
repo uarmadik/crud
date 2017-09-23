@@ -16,8 +16,14 @@ class Controller_admin extends Controller
         $db = new Model_posts();
         $posts = $db->getAllPosts();
 
-        $view = new View();
-        $view->generate_admin('admin_index.html.twig', $posts);
+        if (gettype($posts) != 'array') {
+            $_SESSION['alert_error'] = 'Something wrong!';
+            $view = new View();
+            $view->generate_admin('admin_index.html.twig', null);
+        } else {
+            $view = new View();
+            $view->generate_admin('admin_index.html.twig', $posts);
+        }
     }
 
     public function create()
@@ -28,7 +34,6 @@ class Controller_admin extends Controller
 
     public function store($formData)
     {
-        //var_dump($formData);
         $db = new Model_posts();
         if ($db->store($formData)){
             $_SESSION['alert'] = 'Post saving successful';

@@ -9,16 +9,18 @@ class Model_posts extends Model
 {
     public function getAllPosts()
     {
+        $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
+        $user = $this->db_username;
+        $password = $this->db_password;
+
         try {
-            //$connection = new \PDO('mysql:host=localhost; dbname=crud; charset=utf8','root','');
-            $connection = new \PDO("$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset",
-                                  "$this->db_username","$this->db_password");
+            $connection = new \PDO($dsn,$user,$password);
             $sql = 'SELECT * FROM posts';
             $stmt = $connection->query($sql);
             $posts_array = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         } catch (\PDOException $e) {
-            die('Подключение не удалось: ' . $e->getMessage());
+            return $e->getMessage();
         }
 
         return $posts_array;
@@ -30,15 +32,19 @@ class Model_posts extends Model
      */
     public function getPost($id)
     {
+        $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
+        $user = $this->db_username;
+        $password = $this->db_password;
+
         try {
-            $connection = new \PDO("$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset",
-                                   "$this->db_username","$this->db_password");
-            $sql = "SELECT * FROM posts WHERE id = $id";
-            $stmt = $connection->query($sql);
+            $connection = new \PDO($dsn,$user,$password);
+            $sql = "SELECT * FROM posts WHERE id = ?";
+            $stmt = $connection->prepare($sql);
+            $stmt->execute([$id]);
             $post_array = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         } catch (\PDOException $e) {
-            die('Подключение не удалось: ' . $e->getMessage());
+            return $e->getMessage();
         }
 
         return $post_array;
@@ -53,15 +59,22 @@ class Model_posts extends Model
     {
         $header = '\'' . $data['header'] . '\'';
         $text = '\'' . $data['text'] . '\'';
+
+        $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
+        $user = $this->db_username;
+        $password = $this->db_password;
+
+
         try {
-            $connection = new \PDO("$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset",
-                                   "$this->db_username","$this->db_password");
-            $sql = "INSERT INTO posts VALUES (null,$header, $text)";
-            if ($connection->exec($sql)){
-                return true;
-            }
+            $connection = new \PDO($dsn,$user,$password);
+            $sql = "INSERT INTO posts VALUES (null,:header, :text)";
+            $stmt = $connection->prepare($sql);
+            $stmt->execute(['header'=>$header, 'text'=>$text]);
+
+            return true;
+
         } catch (\PDOException $e) {
-            die('Подключение не удалось: ' . $e->getMessage());
+            return $e->getMessage();
         }
     }
 
@@ -71,15 +84,20 @@ class Model_posts extends Model
      */
     public function destroy($id)
     {
+        $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
+        $user = $this->db_username;
+        $password = $this->db_password;
+
         try {
-            $connection = new \PDO("$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset",
-                                   "$this->db_username","$this->db_password");
-            $sql = "DELETE FROM posts WHERE id = $id";
-            if ($connection->exec($sql)){
-                return true;
-            }
+            $connection = new \PDO($dsn,$user,$password);
+            $sql = "DELETE FROM posts WHERE id = ?";
+            $stmt = $connection->prepare($sql);
+            $stmt->execute([$id]);
+
+            return true;
+
         } catch (\PDOException $e) {
-            die('Подключение не удалось: ' . $e->getMessage());
+            return $e->getMessage();
         }
     }
 
@@ -90,20 +108,24 @@ class Model_posts extends Model
      */
     public function edit($post)
     {
-        $id = '\'' . $post['id'] . '\'';
-        $header = '\'' . $post['header'] .'\'';
-        $text = '\'' . $post['text'] . '\'';
+        $id = $post['id'];
+        $header = $post['header'];
+        $text = $post['text'];
+
+        $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
+        $user = $this->db_username;
+        $password = $this->db_password;
 
         try {
-            $connection = new \PDO("$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset",
-                                   "$this->db_username","$this->db_password");
-            $sql = "UPDATE posts SET header = $header, text = $text WHERE id = $id";
-            if ($connection->exec($sql)){
-                return true;
-            }
+            $connection = new \PDO($dsn,$user,$password);
+            $sql = "UPDATE posts SET header = :header, text = :text WHERE id = :id";
+            $stmt = $connection->prepare($sql);
+            $stmt->execute(['header'=>$header, 'text'=>$text, 'id'=>$id]);
+
+            return true;
+
         } catch (\PDOException $e) {
-            die('Подключение не удалось: ' . $e->getMessage());
+            return $e->getMessage();
         }
     }
-
 }
