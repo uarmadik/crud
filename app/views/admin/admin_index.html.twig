@@ -22,6 +22,8 @@
                 <th>id</th>
                 <th>Header</th>
                 <th>Text</th>
+                <th>Created at</th>
+                <th>Edited at</th>
                 <th>Control</th>
             </tr>
         {% for post in parameters %}
@@ -29,6 +31,8 @@
                 <td>{{ post.id }}</td>
                 <td>{{ post.header }}</td>
                 <td>{{ post.text }}</td>
+                <td>{{ post.created_at }}</td>
+                <td>{{ post.edited_at }}</td>
                 <td>
                     <a href="../admin/edit/{{ post.id }}" class="btn">Edit</a>
                     <a href="../admin/delete/{{ post.id }}" class="btn">Delete</a>

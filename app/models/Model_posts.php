@@ -7,15 +7,31 @@ use app\core\Model;
 
 class Model_posts extends Model
 {
-    public function getAllPosts()
+    public function getAllPosts($order_by = null)
     {
         $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
         $user = $this->db_username;
         $password = $this->db_password;
 
+        switch ($order_by){
+            case 'date_asc':
+                $sql = 'SELECT * FROM posts ORDER BY created_at ASC';
+                break;
+            case 'date_desc':
+                $sql = 'SELECT * FROM posts ORDER BY created_at DESC';
+                break;
+            case 'header_asc':
+                $sql = 'SELECT * FROM posts ORDER BY header ASC';
+                break;
+            case 'header_desc':
+                $sql = 'SELECT * FROM posts ORDER BY header DESC';
+                break;
+            default :
+                $sql = 'SELECT * FROM posts';
+        }
+
         try {
             $connection = new \PDO($dsn,$user,$password);
-            $sql = 'SELECT * FROM posts';
             $stmt = $connection->query($sql);
             $posts_array = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -57,8 +73,8 @@ class Model_posts extends Model
      */
     public function store($data)
     {
-        $header = '\'' . $data['header'] . '\'';
-        $text = '\'' . $data['text'] . '\'';
+        $header = $data['header'];
+        $text = $data['text'];
 
         $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
         $user = $this->db_username;
@@ -67,9 +83,10 @@ class Model_posts extends Model
 
         try {
             $connection = new \PDO($dsn,$user,$password);
-            $sql = "INSERT INTO posts VALUES (null,:header, :text)";
+            $sql = "INSERT INTO posts VALUES (null,:header, :text, now(), NULL)";
             $stmt = $connection->prepare($sql);
-            $stmt->execute(['header'=>$header, 'text'=>$text]);
+            $stmt->execute(['header'=>$header,
+                            'text'=>$text]);
 
             return true;
 
@@ -115,10 +132,11 @@ class Model_posts extends Model
         $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
         $user = $this->db_username;
         $password = $this->db_password;
+        $datetime = date("Y-m-d H:i");
 
         try {
             $connection = new \PDO($dsn,$user,$password);
-            $sql = "UPDATE posts SET header = :header, text = :text WHERE id = :id";
+            $sql = "UPDATE posts SET header = :header, text = :text, edited_at = now() WHERE id = :id";
             $stmt = $connection->prepare($sql);
             $stmt->execute(['header'=>$header, 'text'=>$text, 'id'=>$id]);
 

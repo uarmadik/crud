@@ -39,31 +39,100 @@ body {
     border: 1px solid lightgray;
     box-shadow: 0 0 6px #222;
 }
-    .wrap > h2 {
-        color: #fff;
-        margin-left: 2em;
-    }
+
 
 /* main view  */
+.main_view__top {
+    padding-right: 1em;
+}
+.main_view__top:after{
+    display: table;
+    content: '';
+    clear: both;
+}
+    .main_view__top h2 {
+        color: #fff;
+        margin-left: 2em;
+        float: left;
+    }
+    .main_view__top .sort_list {
+        float: right;
+        color: #fff;
+    }
+        .main_view__top .sort_list span {
+            font-weight: bold;
+        }
+        .main_view__top li {
+            list-style-type: none;
+            list-style-position: inside;
+        }
+/* Sort_by list */
+
+    .sort_list {
+        position: relative;
+    }
+        .sub-menu {
+            display: none;
+            position: absolute;
+            padding: 0;
+            transition: all .5s;
+            background-color: indianred;
+        }
+            .sub-menu a {
+                display: block;
+                width: 100%;
+                padding: .5em;
+                text-decoration: none;
+                border-bottom: 1px solid #999;
+                color: #fff;
+                background-color: #222;
+            }
+
+            .sub-menu a:hover {
+                background-color: slategray;
+
+            }
+
+        .sort_list:hover > ul {
+            display: block;
+            background-color: olive;
+        }
+/* /Sort_by list */
+
 
 .main-content_wrap {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-wrap: wrap;
 
+    padding: .5em;
     background-color: #fff;
 }
     .post {
-        width: 100%;
-        margin: .5em 0;
-        max-width: 400px;
-        min-width: 300px;
+        width: auto;
+        margin: 0 auto;
+        margin-bottom: .5em;
+        padding-left: 1em;
+        min-width: 320px;
         background-color: #fff2b4;
         border: 1px solid #999;
-        padding: .5em;
         border-radius: 4px;
     }
+        .post_top:after{
+            display: table;
+            content: '';
+            clear: both;
+        }
+            .post_top p {
+                float: right;
+                margin: .5em;
+                color: #999;
+
+            }
+            .post_top p:first-child {
+                float: left;
+            }
+            .post_top p span {
+                color: darkred;
+                font-style: italic;
+            }
 
 /* /main view  */
 

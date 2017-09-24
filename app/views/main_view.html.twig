@@ -4,13 +4,30 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Main view</h2>
+    <div class="main_view__top">
+        <h2>Main view</h2>
+        <ul class="sort_list">
+            <li>Sort by <span>{{ parameters.sort }}</span> ▼</li>
+            <ul class="sub-menu">
+                <li><a href="/main/index/date_ask">By date asc</a></li>
+                <li><a href="/main/index/date_desc">By date desc</a></li>
+                <li><a href="/main/index/header_asc">By header asc</a></li>
+                <li><a href="/main/index/header_desc">By header desc</a></li>
+            </ul>
+        </ul>
+    </div>
     <div class="main-content_wrap">
 
      {% if parameters %}
-         {% for post in parameters %}
+         {% for post in parameters.posts %}
              <div class="post">
-                <p>id: {{ post.id }}</p>
+                 <div class="post_top">
+                     <p>id: <span>{{ post.id }}</span></p>
+                     {% if post.edited_at %}
+                         <p>Edited: <span>{{ post.edited_at }}</span></p>
+                     {% endif %}
+                     <p>Created: <span>{{ post.created_at }}</span></p>
+                 </div>
                 <h2>{{ post.header }}</h2>
                 <p>{{ post.text }}</p>
              </div>
