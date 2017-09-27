@@ -32,14 +32,42 @@ class Controller_admin extends Controller
         $view->generate_admin('admin_create.html.twig', null);
     }
 
-    public function store($formData)
+    /**
+     * To save new post or save changing existing in DB;
+     * @var $action gets value from hidden input in form
+     */
+    public function store()
     {
+        $action = $_POST['action'];
+        $formData['header'] = $_POST['header'];
+        $formData['text']   = $_POST['text'];
+        $formData['id']     = $_POST['id'];
+
         $db = new Model_posts();
-        if ($db->store($formData)){
-            $_SESSION['alert'] = 'Post saving successful';
-            header('Location: /admin');
+
+        switch ($action) {
+            case 'create':
+                if ($db->store($formData)) {
+                    $_SESSION['alert'] = 'Post saving successful';
+                    header('Location: /admin');
+                } else {
+                    $_SESSION['alert_error'] = 'Something wrong';
+                    header('Location: /admin');
+                }
+                break;
+            case 'edit':
+                if ($db->edit($formData)) {
+                    $_SESSION['alert'] = 'Changes saving successful';
+                    header('Location: /admin');
+                } else {
+                    $_SESSION['alert_error'] = 'Something wrong';
+                    header('Location: /admin');
+                }
+                break;
+
         }
     }
+
 
     public function delete($id)
     {
@@ -62,18 +90,5 @@ class Controller_admin extends Controller
         $view = new View();
         $view->generate_admin('admin_edit.html.twig', $post);
 
-    }
-
-    /**
-     * Saving changed post in table;
-     * @param $post
-     */
-    public function saveChange($post)
-    {
-        $db = new Model_posts();
-        if ($db->edit($post)) {
-            $_SESSION['alert'] = 'Changes saving successful';
-            header('Location: /admin');
-        }
     }
 }
