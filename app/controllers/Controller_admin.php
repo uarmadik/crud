@@ -13,23 +13,34 @@ class Controller_admin extends Controller
 
     public function index()
     {
+        var_dump($_SESSION);
+
+        if (!empty($_SESSION['alert'])) {
+            $message['alert'] = $_SESSION['alert'];
+            unset($_SESSION['alert']);
+        }
+        if ($_SESSION['alert_error']) {
+            $message['alert_error'] = $_SESSION['alert_error'];
+            unset($_SESSION['alert_error']);
+        }
+
         $db = new Model_posts();
         $posts = $db->getAllPosts();
 
         if (gettype($posts) != 'array') {
             $_SESSION['alert_error'] = 'Something wrong!';
             $view = new View();
-            $view->generate_admin('admin_index.html.twig', null);
+            $view->generate('admin','admin_index.html.twig', null);
         } else {
             $view = new View();
-            $view->generate_admin('admin_index.html.twig', $posts);
+            $view->generate('admin','admin_index.html.twig', ['post'=>$posts, 'message'=>$message]);
         }
     }
 
     public function create()
     {
         $view = new View();
-        $view->generate_admin('admin_create.html.twig', null);
+        $view->generate('admin','admin_create.html.twig', null);
     }
 
     /**
@@ -88,7 +99,7 @@ class Controller_admin extends Controller
         $post = $db->getPost($id);
 
         $view = new View();
-        $view->generate_admin('admin_edit.html.twig', $post);
+        $view->generate('admin','admin_edit.html.twig', $post);
 
     }
 }

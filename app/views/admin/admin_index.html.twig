@@ -5,13 +5,13 @@
 
 
 {% block content %}
-    {% if session.alert %}
+    {% if parameters.message.alert %}
         <div class="alert">
-            <p>{{ session.alert }}</p>
+            <p>{{ parameters.message.alert }}</p>
         </div>
-    {% elseif session.alert_error %}
+    {% elseif parameters.message.alert_error %}
         <div class="alert alert-error">
-            <p>{{ session.alert_error }}</p>
+            <p>{{ parameters.message.alert_error }}</p>
         </div>
     {% endif %}
 
@@ -26,7 +26,7 @@
                 <th>Edited at</th>
                 <th>Control</th>
             </tr>
-        {% for post in parameters %}
+        {% for post in parameters.post %}
             <tr>
                 <td>{{ post.id }}</td>
                 <td>{{ post.header }}</td>

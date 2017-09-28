@@ -18,7 +18,7 @@ class Controller_main
         $posts = $db->getAllPosts($order_by);
 
         $view = new View();
-        $view->generate('main_view.html.twig', ['posts'=>$posts, 'sort'=>$order_by]);
+        $view->generate('general','main_view.html.twig', ['posts'=>$posts, 'sort'=>$order_by]);
     }
 
 }
