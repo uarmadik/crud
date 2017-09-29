@@ -10,22 +10,42 @@ use app\models\Model_posts;
 
 class Controller_admin extends Controller
 {
+    protected $user_id;
+    protected $role_super_admin;
+
+    public function __construct()
+    {
+        if (empty($_SESSION['user_login']) && empty($_SESSION['user_id'])) {
+            // Error! Немає доступу.
+            $_SESSION['alert_error'] = 'You are not logged!';
+            header('Location:/login'); exit();
+        } else {
+            $this->user_id = $_SESSION['user_id'];
+            $this->role_super_admin = ($_SESSION['user_login'] == 'super-admin') ? true : false;
+        }
+
+    }
 
     public function index()
     {
-        var_dump($_SESSION);
+        $user_id = $this->user_id;
+        $user['login'] = $_SESSION['user_login'];
 
         if (!empty($_SESSION['alert'])) {
             $message['alert'] = $_SESSION['alert'];
             unset($_SESSION['alert']);
         }
-        if ($_SESSION['alert_error']) {
+        if (!empty($_SESSION['alert_error'])) {
             $message['alert_error'] = $_SESSION['alert_error'];
             unset($_SESSION['alert_error']);
         }
 
         $db = new Model_posts();
-        $posts = $db->getAllPosts();
+        if ($this->role_super_admin){
+            $posts = $db->getAllPosts();
+        }else{
+            $posts = $db->getAllPostsByUser($user_id);
+        }
 
         if (gettype($posts) != 'array') {
             $_SESSION['alert_error'] = 'Something wrong!';
@@ -33,10 +53,16 @@ class Controller_admin extends Controller
             $view->generate('admin','admin_index.html.twig', null);
         } else {
             $view = new View();
-            $view->generate('admin','admin_index.html.twig', ['post'=>$posts, 'message'=>$message]);
+            $view->generate('admin','admin_index.html.twig', ['post'=>$posts,
+                                                                                      'message'=>$message,
+                                                                                      'user'=>$user]);
         }
     }
 
+
+    /**
+     * Open form create post.
+     */
     public function create()
     {
         $view = new View();
@@ -53,6 +79,7 @@ class Controller_admin extends Controller
         $formData['header'] = $_POST['header'];
         $formData['text']   = $_POST['text'];
         $formData['id']     = $_POST['id'];
+        $formData['author_id'] = $_SESSION['user_id'];
 
         $db = new Model_posts();
 
@@ -67,7 +94,8 @@ class Controller_admin extends Controller
                 }
                 break;
             case 'edit':
-                if ($db->edit($formData)) {
+
+                if ($db->edit($formData, $this->user_id, $this->role_super_admin)) {
                     $_SESSION['alert'] = 'Changes saving successful';
                     header('Location: /admin');
                 } else {
@@ -80,12 +108,15 @@ class Controller_admin extends Controller
     }
 
 
-    public function delete($id)
+    public function delete($post_id)
     {
         $db = new Model_posts();
-        if ($db->destroy($id)) {
+        if ($db->destroy($post_id, $this->user_id, $this->role_super_admin)) {
             $_SESSION['alert'] = 'Post delete successful';
             header('Location: /admin');
+        } else{
+            $_SESSION['alert_error'] = 'You do not have access';
+            header('Location: /admin'); exit();
         }
     }
 
@@ -93,10 +124,15 @@ class Controller_admin extends Controller
      * Open form to edit post;
      * @param $id
      */
-    public function edit($id)
+    public function edit($post_id)
     {
         $db = new Model_posts();
-        $post = $db->getPost($id);
+        $post = $db->getPost($post_id, $this->user_id,$this->role_super_admin);
+
+        if (empty($post)) {
+            $_SESSION['alert_error'] = 'You do not have access';
+            header('Location: /admin'); exit();
+        }
 
         $view = new View();
         $view->generate('admin','admin_edit.html.twig', $post);
