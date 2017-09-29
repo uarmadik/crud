@@ -17,30 +17,23 @@
 
     <a href="/admin/create" class="btn">Create post</a>
     {% if parameters %}
-        <table cellspacing="0">
-            <tr>
-                <th>id</th>
-                <th>Header</th>
-                <th>Text</th>
-                <th>Created at</th>
-                <th>Edited at</th>
-                <th>Control</th>
-            </tr>
         {% for post in parameters.post %}
-            <tr>
-                <td>{{ post.id }}</td>
-                <td>{{ post.header }}</td>
-                <td>{{ post.text }}</td>
-                <td>{{ post.created_at }}</td>
-                <td>{{ post.edited_at }}</td>
-                <td>
+            <div class="admin_post">
+                <div class="admin_post__content">
+                    <h1>{{ post.header }}</h1>
+                    <p>{{ post.text }}</p>
+                    <div class="additional">
+                        <p>Id: <span>{{ post.id }}</span></p>
+                        <p>Created at: <span>{{ post.created_at }}</span></p>
+                        <p>Edited at: <span>{{ post.edited_at }}</span></p>
+                    </div>
+                </div>
+                <div class="admin_post__controls">
                     <a href="../admin/edit/{{ post.id }}" class="btn">Edit</a>
                     <a href="../admin/delete/{{ post.id }}" class="btn">Delete</a>
-                </td>
-            </tr>
+                </div>
+            </div>
         {% endfor %}
-        </table>
     {% endif %}
-
 
 {% endblock %}

@@ -12,6 +12,12 @@ body {
         font-size: 4em;
         margin: 0;
     }
+    .logo p {
+        float: right;
+        padding: .5em;
+        color: #fff;
+        font: bold 1.5em sans-serif;
+    }
     .logo a {
         float: right;
         display: block;
@@ -66,6 +72,19 @@ body {
             list-style-type: none;
             list-style-position: inside;
         }
+
+.alert {
+    width: auto;
+    padding: 0.5em 1em;
+    color: green;
+    background-color: #b1dbb1;
+    font: normal 1.2em sans-serif;
+}
+.alert-error {
+    color: darkred;
+    background-color: #edafaf;
+}
+
 /* Sort_by list */
 
     .sort_list {
@@ -133,6 +152,24 @@ body {
                 color: darkred;
                 font-style: italic;
             }
+
+            /* form wrap */
+    .form-wrap {
+        margin: 0 auto;
+    }
+        .form-wrap form {
+            display: block;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+            .form-wrap input{
+                display: block;
+                width: auto;
+                padding: .5em 1em;
+                margin: .5em 0;
+            }
+
 
 /* /main view  */
 

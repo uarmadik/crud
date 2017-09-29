@@ -32,6 +32,12 @@ body {
     .logo a:hover {
         background-color: rgba(255,255,255,.35);
     }
+    .logo p {
+        float: right;
+        padding: .5em;
+        color: #fff;
+        font: bold 1.5em sans-serif;
+    }
 .logo:after {
     display: table;
     content: '';
@@ -59,18 +65,43 @@ body {
     .btn:hover {
         background-color: #ffffdd;
     }
-    table {
-        cellspacing: 0;
-        margin-top: 1em;
+    /* post in admin panel */
+
+.admin_post {
+    background-color: beige;
+    padding: 0 .5em;
+    margin-bottom: .5em;
+    border-bottom: 2px solid #999;
+}
+.admin_post:after{
+    display: table;
+    content: '';
+    clear: both;
+}
+    .admin_post__controls {
+        float: right;
     }
-        table tr:nth-child(even) {
-            background-color: aliceblue;
+    .admin_post__content {
+        float: left;
+        max-width: calc(100% - 150px);
+    }
+        .admin_post__content > p {
+            max-height: 200px;
+            overflow: auto;
         }
-            table td {
-                border-bottom: 1px solid #999;
-                border-top: 1px solid #999;
-                padding: 0.2em 1em;
+        .admin_post__content .additional {
+            display: block;
+            width: auto;
+            height: auto;
+        }
+            .admin_post__content .additional p {
+                display: inline-block;
+                padding: .2em;
+                margin: .5em;
+                background-color: rgba(0,0,0,.1);
             }
+
+    /* /post in admin panel */
 
     .alert {
         width: auto;

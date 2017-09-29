@@ -1,14 +1,24 @@
 {% extends "template.html.twig" %}
 {% block title %}
-    Register form
+    Login form
 {% endblock %}
 
 {% block content %}
-    <form action="/register/registration" method="POST">
-        <input type="text" name="login" placeholder="Login">
-        <input type="password" name="password" placeholder="Password">
-        <input type="password" name="re_password" placeholder="Confirm Password">
-        <input type="submit" value="Registration">
-    </form>
+    {% if parameters.message.alert_error %}
+       <div class="alert alert-error">
+            <p> {{ parameters.message.alert_error }} </p>
+       </div>
+    {% elseif parameters.message.alert %}
+        <div class="alert alert">
+            <p> {{ parameters.message.alert }} </p>
+        </div>
+    {% endif %}
+    <div class="form-wrap">
+        <form action="/login/login" method="POST">
+            <input type="text" name="login" placeholder="Login">
+            <input type="password" name="password" placeholder="Password">
+            <input type="submit" value="Login">
+        </form>
+    </div>
 
 {% endblock %}

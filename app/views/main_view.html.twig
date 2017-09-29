@@ -23,6 +23,7 @@
              <div class="post">
                  <div class="post_top">
                      <p>id: <span>{{ post.id }}</span></p>
+                     <p>Author: <span>{{ post.login }}</span></p>
                      {% if post.edited_at %}
                          <p>Edited: <span>{{ post.edited_at }}</span></p>
                      {% endif %}
