@@ -7,7 +7,7 @@ use app\core\Model;
 
 class Model_posts extends Model
 {
-    public function getAllPosts($order_by=null)
+    public function getAllPosts($post_from, $limit, $order_by = null)
     {
         $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
         $user = $this->db_username;
@@ -17,30 +17,34 @@ class Model_posts extends Model
                 case 'date_asc':
                     //$sql = 'SELECT * FROM posts ORDER BY created_at ASC';
                     $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
-                        FROM posts INNER JOIN users ON posts.author_id=users.id';
+                        FROM posts INNER JOIN users ON posts.author_id=users.id LIMIT ?, ?';
                     break;
                 case 'date_desc':
                     $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
-                        FROM posts INNER JOIN users ON posts.author_id=users.id ORDER BY posts.created_at DESC';
+                        FROM posts INNER JOIN users ON posts.author_id=users.id ORDER BY posts.created_at DESC LIMIT ?, ?';
                     break;
                 case 'header_asc':
                     $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
-                        FROM posts INNER JOIN users ON posts.author_id=users.id ORDER BY posts.header ASC';
+                        FROM posts INNER JOIN users ON posts.author_id=users.id ORDER BY posts.header ASC LIMIT ?, ?';
                     break;
                 case 'header_desc':
                     $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
-                        FROM posts INNER JOIN users ON posts.author_id=users.id ORDER BY posts.header DESC';
+                        FROM posts INNER JOIN users ON posts.author_id=users.id ORDER BY posts.header DESC LIMIT ?, ?';
                     break;
                 default :
                     //$sql = 'SELECT * FROM posts';
                     $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
-                        FROM posts INNER JOIN users ON posts.author_id=users.id';
+                        FROM posts INNER JOIN users ON posts.author_id=users.id LIMIT ?, ?';
             }
 
         try {
             $connection = new \PDO($dsn,$user,$password);
-            $stmt = $connection->query($sql);
+            $stmt = $connection->prepare($sql);
+            $stmt->bindValue(1, $post_from, \PDO::PARAM_INT);
+            $stmt->bindValue(2, $limit, \PDO::PARAM_INT);
+            $stmt->execute();
             $posts_array = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
 
         } catch (\PDOException $e) {
             return $e->getMessage();
@@ -49,7 +53,7 @@ class Model_posts extends Model
         return $posts_array;
     }
 
-    public function getAllPostsByUser($user_id, $order_by=null)
+    public function getAllPostsByUser($post_from, $limit, $user_id, $order_by=null)
     {
         $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
         $user = $this->db_username;
@@ -57,28 +61,31 @@ class Model_posts extends Model
 
         switch ($order_by){
             case 'date_asc':
-                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY created_at ASC';
+                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY created_at ASC LIMIT ?, ?';
                 break;
             case 'date_desc':
-                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY created_at DESC';
+                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY created_at DESC LIMIT ?, ?';
                 break;
             case 'header_asc':
-                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY header ASC';
+                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY header ASC LIMIT ?, ?';
                 break;
             case 'header_desc':
-                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY header DESC';
+                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY header DESC LIMIT ?, ?';
                 break;
             default :
-                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY created_at ASC';
+                $sql = 'SELECT * FROM posts WHERE author_id = ? ORDER BY created_at ASC LIMIT ?, ?';
                 break;
         }
 
         try {
             $connection = new \PDO($dsn,$user,$password);
             $stmt = $connection->prepare($sql);
-            $stmt->execute([$user_id]);
-            $posts_array = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $stmt->bindValue(1, $user_id, \PDO::PARAM_INT);
+            $stmt->bindValue(2, $post_from, \PDO::PARAM_INT);
+            $stmt->bindValue(3, $limit, \PDO::PARAM_INT);
+            $stmt->execute();
 
+            $posts_array = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         } catch (\PDOException $e) {
             return $e->getMessage();
@@ -87,6 +94,47 @@ class Model_posts extends Model
         return $posts_array;
 
     }
+
+    public function get_quantity_rows()
+    {
+        $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
+        $user = $this->db_username;
+        $password = $this->db_password;
+
+        try{
+            $connection = new \PDO($dsn,$user,$password);
+            $get_rows = $connection->query('SELECt COUNT(*) FROM posts');
+            // quantity rows
+            $rows = $get_rows->fetchAll(\PDO::FETCH_COLUMN)[0];
+
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+        return $rows;
+    }
+
+    public function get_quantity_rows_by_user($user_id)
+    {
+        $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
+        $user = $this->db_username;
+        $password = $this->db_password;
+
+        try{
+            $connection = new \PDO($dsn,$user,$password);
+            $sql = 'SELECt COUNT(*) FROM posts WHERE author_id = ?';
+            $stmt = $connection->prepare($sql);
+            $stmt->execute([$user_id]);
+            // quantity rows
+            $rows = $stmt->fetchAll(\PDO::FETCH_COLUMN)[0];
+
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+        return $rows;
+    }
+
 
     /**
      * @param $id

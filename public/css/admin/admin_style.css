@@ -87,6 +87,7 @@ body {
     }
         .admin_post__content > p {
             max-height: 200px;
+            padding: 5px;
             overflow: auto;
         }
         .admin_post__content .additional {
@@ -101,6 +102,42 @@ body {
                 background-color: rgba(0,0,0,.1);
             }
 
+
+    /* pagination */
+
+    .pagination_wrap {
+        width: 100%;
+    }
+        .pagination {
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+            padding: 0;
+        }
+        .pagination:after {
+            display: table;
+            content: '';
+            clear: both;
+        }
+            .pagination li {
+                float: left;
+                list-style-type: none;
+                margin: 0 2px;
+            }
+                .pagination li a {
+                    display: block;
+                    padding: .5em;
+                    text-decoration: none;
+                    color: #fff;
+                    background-color: rgba(0,0,0,.5);
+                    font: bold 1.2em sans-serif;
+                    transition: all .2s linear;
+                }
+                .pagination li a:hover {
+                    background-color: rgba(0,0,0,.8);
+                    color: #fff;
+                }
+    /* /pagination */
     /* /post in admin panel */
 
     .alert {

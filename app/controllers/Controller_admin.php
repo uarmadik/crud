@@ -26,9 +26,8 @@ class Controller_admin extends Controller
 
     }
 
-    public function index()
+    public function index($current_page = 1)
     {
-        $user_id = $this->user_id;
         $user['login'] = $_SESSION['user_login'];
 
         if (!empty($_SESSION['alert'])) {
@@ -40,11 +39,23 @@ class Controller_admin extends Controller
             unset($_SESSION['alert_error']);
         }
 
+        $post_from = $current_page * $this->per_page - $this->per_page;
+        $limit     = $this->per_page;
+
         $db = new Model_posts();
+
         if ($this->role_super_admin){
-            $posts = $db->getAllPosts();
-        }else{
-            $posts = $db->getAllPostsByUser($user_id);
+
+            $rows = $db->get_quantity_rows();
+            $posts = $db->getAllPosts($post_from, $limit);
+            $pages = ceil($rows/$this->per_page);
+
+        } else {
+
+            $rows = $db->get_quantity_rows_by_user($this->user_id);
+            $posts = $db->getAllPostsByUser($post_from, $limit, $this->user_id);
+            $pages = ceil($rows/$this->per_page);
+
         }
 
         if (gettype($posts) != 'array') {
@@ -55,7 +66,8 @@ class Controller_admin extends Controller
             $view = new View();
             $view->generate('admin','admin_index.html.twig', ['post'=>$posts,
                                                                                       'message'=>$message,
-                                                                                      'user'=>$user]);
+                                                                                      'user'=>$user,
+                                                                                      'pages'=>$pages]);
         }
     }
 

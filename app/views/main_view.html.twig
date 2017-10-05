@@ -36,4 +36,14 @@
      {% endif %}
 
     </div>
+
+    <div class="pagination_wrap">
+        <ul class="pagination">
+            {% for i in 1..parameters.pages %}
+                <li><a href="/main/index/{{ i }}">{{ i }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
 {% endblock %}
