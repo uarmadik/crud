@@ -9,34 +9,40 @@
         <ul class="sort_list">
             <li>Sort by <span>{{ parameters.sort }}</span> ▼</li>
             <ul class="sub-menu">
-                <li><a href="/main/index/date_ask">By date asc</a></li>
-                <li><a href="/main/index/date_desc">By date desc</a></li>
-                <li><a href="/main/index/header_asc">By header asc</a></li>
-                <li><a href="/main/index/header_desc">By header desc</a></li>
+                <li><a href="/main/order/date_ask">By date asc</a></li>
+                <li><a href="/main/order/date_desc">By date desc</a></li>
+                <li><a href="/main/order/header_asc">By header asc</a></li>
+                <li><a href="/main/order/header_desc">By header desc</a></li>
             </ul>
         </ul>
     </div>
     <div class="main-content_wrap">
+        {% if parameters %}
+            {% for post in parameters.posts %}
+        <div class="post">
+            <div class="post_content">
+                <div class="post_text">
+                    <h1>{{ post.header }}</h1>
+                    <p>{{ post.text }}</p>
+                </div>
+                <div class="post_image">
+                    <img src="/public/img/uploaded_files/{{ post.img_name }}" alt="{{ post.img_name }}">
+                </div>
+            </div>
+            <div class="post_addition">
+                <p>post id: <span>{{ post.id }}</span></p>
+                <p>Author: <span>{{ post.login }}</span></p>
+                <p>Created at: <span>{{ post.created_at }}</span></p>
+                {% if post.edited_at %}
+                    <p>Edited at: <span>{{ post.edited_at }}</span></p>
+                {% endif %}
+            </div>
+        </div>
 
-     {% if parameters %}
-         {% for post in parameters.posts %}
-             <div class="post">
-                 <div class="post_top">
-                     <p>id: <span>{{ post.id }}</span></p>
-                     <p>Author: <span>{{ post.login }}</span></p>
-                     {% if post.edited_at %}
-                         <p>Edited: <span>{{ post.edited_at }}</span></p>
-                     {% endif %}
-                     <p>Created: <span>{{ post.created_at }}</span></p>
-                 </div>
-                <h2>{{ post.header }}</h2>
-                <p>{{ post.text }}</p>
-             </div>
-         {% endfor %}
-     {% endif %}
+            {% endfor %}
+        {% endif %}
 
     </div>
-
     <div class="pagination_wrap">
         <ul class="pagination">
             {% for i in 1..parameters.pages %}

@@ -60,11 +60,10 @@ class Controller_admin extends Controller
 
         if (gettype($posts) != 'array') {
             $_SESSION['alert_error'] = 'Something wrong!';
-            $view = new View();
-            $view->generate('admin','admin_index.html.twig', null);
+            header('Location:/'); exit();
         } else {
             $view = new View();
-            $view->generate('admin','admin_index.html.twig', ['post'=>$posts,
+            $view->generate('admin','admin_index.html.twig', ['posts'=>$posts,
                                                                                       'message'=>$message,
                                                                                       'user'=>$user,
                                                                                       'pages'=>$pages]);
@@ -87,11 +86,43 @@ class Controller_admin extends Controller
      */
     public function store()
     {
-        $action = $_POST['action'];
-        $formData['header'] = $_POST['header'];
-        $formData['text']   = $_POST['text'];
-        $formData['id']     = $_POST['id'];
-        $formData['author_id'] = $_SESSION['user_id'];
+        $action                 = $_POST['action'];
+        $formData['header']     = $_POST['header'];
+        $formData['text']       = $_POST['text'];
+        $formData['id']         = $_POST['id'];
+        $formData['author_id']  = $_SESSION['user_id'];
+
+
+        if(!empty($_FILES['upload_file']['name'])) {
+
+            $allowed =  array('gif','png' ,'jpeg');
+
+            $filename = $_FILES['upload_file']['name'];
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+            if(!in_array($ext,$allowed)) {
+                // Error! Incorrect extension!
+                $_SESSION['alert_error'] = 'Error! Incorrect extension!';
+                header('Location: /'); exit();
+            }
+
+            if ($_FILES['upload_file']['size'] > 2000000) {
+                // Error. to large file!
+                $_SESSION['alert_error'] = 'Error! To large file!';
+                header('Location: /'); exit();
+            }
+            $file_name = $_FILES['upload_file']['name'];
+            $type = $_FILES['upload_file']['type'];
+            $name = $_FILES['upload_file']['tmp_name'];
+
+            if (!$this->resize($type, $name)){
+                // Error! File did not upload!
+                $_SESSION['alert_error'] = 'Error! File did not upload!';
+                header('Location: /'); exit();
+            } else {
+                $formData['img_name'] = $_FILES['upload_file']['name'];
+            }
+        }
 
         $db = new Model_posts();
 
@@ -115,8 +146,77 @@ class Controller_admin extends Controller
                     header('Location: /admin');
                 }
                 break;
-
         }
+
+    }
+
+
+    /**
+     *
+     * Resize image width to 320px or image height to 240px
+     * and move file to folder.
+     *
+     * @param $type
+     * @param $name
+     * @return bool
+     */
+    public function resize($type, $name)
+    {
+        switch ($type){
+            case 'image/jpeg':
+                $img = imagecreatefromjpeg($name);
+                break;
+            case 'image/gif':
+                $img = imagecreatefromgif($name);
+                break;
+            case 'image/png':
+                $img = imagecreatefrompng($name);
+                break;
+        }
+
+        $img_width = imagesx($img);
+        $img_height = imagesy($img);
+
+        $width = 320;
+        $height = 240;
+
+        $koef_width = round($img_width/$width,3);
+        $koef_height = round($img_height/$height,3);
+
+        if (($img_width/$img_height) > 1) {
+
+            $new_height = $img_height/$koef_width;
+            $new_width = $img_width/$koef_width;
+
+        } else {
+
+            $new_width = $img_width/$koef_height;
+            $new_height = $img_height/$koef_height;
+        }
+
+
+        $new_img = imagecreatetruecolor($new_width, $new_height);
+
+        $res = imagecopyresampled($new_img, $img, 0,0,0,0, $new_width, $new_height, $img_width,$img_height);
+        $path_to_file = '../public/img/uploaded_files/'.$_FILES['upload_file']['name'];
+
+        switch ($type){
+            case 'image/jpeg':
+                $result = imagejpeg($new_img, $path_to_file);
+                break;
+            case 'image/gif':
+                $result = imagegif($new_img, $path_to_file);
+                break;
+            case 'image/png':
+                $result = imagepng($new_img, $path_to_file);
+                break;
+        }
+
+        imagedestroy($new_img);
+        imagedestroy($img);
+
+        return $result;
+
     }
 
 

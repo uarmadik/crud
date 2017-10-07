@@ -16,24 +16,24 @@ class Model_posts extends Model
             switch ($order_by) {
                 case 'date_asc':
                     //$sql = 'SELECT * FROM posts ORDER BY created_at ASC';
-                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
+                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, posts.img_name, users.login 
                         FROM posts INNER JOIN users ON posts.author_id=users.id LIMIT ?, ?';
                     break;
                 case 'date_desc':
-                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
+                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, posts.img_name, users.login 
                         FROM posts INNER JOIN users ON posts.author_id=users.id ORDER BY posts.created_at DESC LIMIT ?, ?';
                     break;
                 case 'header_asc':
-                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
+                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, posts.img_name, users.login 
                         FROM posts INNER JOIN users ON posts.author_id=users.id ORDER BY posts.header ASC LIMIT ?, ?';
                     break;
                 case 'header_desc':
-                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
+                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, posts.img_name, users.login 
                         FROM posts INNER JOIN users ON posts.author_id=users.id ORDER BY posts.header DESC LIMIT ?, ?';
                     break;
                 default :
                     //$sql = 'SELECT * FROM posts';
-                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, users.login 
+                    $sql = 'SELECT posts.id, posts.header, posts.text, posts.created_at, posts.edited_at, posts.img_name, users.login 
                         FROM posts INNER JOIN users ON posts.author_id=users.id LIMIT ?, ?';
             }
 
@@ -184,6 +184,10 @@ class Model_posts extends Model
         $header = $data['header'];
         $text = $data['text'];
         $author_id = $data['author_id'];
+        if (!empty($data['img_name'])) {
+            $img_name = $data['img_name'];
+        }
+        $img_name = (!empty($data['img_name'])) ? $data['img_name'] : null;
 
         $dsn = "$this->db_driver:host=$this->db_host; dbname=$this->db_name; charset=$this->db_charset";
         $user = $this->db_username;
@@ -192,11 +196,12 @@ class Model_posts extends Model
 
         try {
             $connection = new \PDO($dsn,$user,$password);
-            $sql = "INSERT INTO posts VALUES (null,:header, :text, now(), NULL, :author_id)";
+            $sql = "INSERT INTO posts VALUES (null,:header, :text, now(), NULL, :author_id, :img_name)";
             $stmt = $connection->prepare($sql);
             $stmt->execute(['header'    =>$header,
                             'text'      =>$text,
-                            'author_id' =>$author_id]);
+                            'author_id' =>$author_id,
+                            'img_name'  =>$img_name]);
 
             return true;
 

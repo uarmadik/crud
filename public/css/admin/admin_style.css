@@ -52,7 +52,7 @@ body {
     box-shadow: 0 0 6px #222;
 }
     .btn {
-        display: block;
+        display: inline-block;
         margin: 0.5em;
         padding: 0.2em 0;
         width: 100px;
@@ -67,40 +67,53 @@ body {
     }
     /* post in admin panel */
 
-.admin_post {
-    background-color: beige;
-    padding: 0 .5em;
-    margin-bottom: .5em;
-    border-bottom: 2px solid #999;
+.top {
+    background-color: rgba(150,200,150,.5);
+    padding: 1em;
 }
-.admin_post:after{
-    display: table;
-    content: '';
-    clear: both;
+    .top a {
+        margin: 0;
+        padding: .5em 1em;
+    }
+.post {
+    border-bottom: 1px solid #999;
+    background-color: #fcf7ea;
 }
-    .admin_post__controls {
-        float: right;
+    .post_content,
+    .post_addition {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        padding: .5em;
     }
-    .admin_post__content {
-        float: left;
-        max-width: calc(100% - 150px);
-    }
-        .admin_post__content > p {
-            max-height: 200px;
-            padding: 5px;
-            overflow: auto;
+        .post_content {
+
         }
-        .admin_post__content .additional {
-            display: block;
-            width: auto;
-            height: auto;
+        .post_text {
+
         }
-            .admin_post__content .additional p {
-                display: inline-block;
-                padding: .2em;
-                margin: .5em;
-                background-color: rgba(0,0,0,.1);
+            .post_text h1 {
+
             }
+            .post_text p {
+
+            }
+            .post_image img {
+                box-shadow: 0 0 2px #222;
+            }
+        .post_addition {
+            justify-content: flex-start;
+        }
+            .post_addition p {
+                font-size: .8em;
+                color: #999;
+                margin-left: 1em;
+            }
+                .post_addition span {
+                    font-size: 1em;
+                    color: #222;
+                }
 
 
     /* pagination */
@@ -162,3 +175,31 @@ body {
     }
 
 /* /create form */
+
+/* MEDIA*/
+
+@media (max-width: 780px) {
+    .post_content {
+        flex-direction: column;
+    }
+    .post_image img {
+        display: block;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 880px) {
+    .logo > div {
+        float: none;
+    }
+    .logo p {
+        float: none;
+
+    }
+    .logo a {
+        float: none;
+        width: auto;
+        border-bottom: 2px solid;
+
+    }
+}

@@ -13,7 +13,6 @@ class Route
         $action_name = (!empty($routes[2]))     ? $routes[2] : 'index';
         $parameter = (!empty($routes[3]))       ? $routes[3] : null;
 
-
         if (file_exists('../app/controllers/'. $controller_name . '.php')){
             $controller_file_name = 'app\controllers\\' . $controller_name;
             $init = new $controller_file_name();

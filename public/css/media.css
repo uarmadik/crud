@@ -1,0 +1,25 @@
+@media (max-width: 780px) {
+        .post_content {
+            flex-direction: column;
+        }
+                .post_image img {
+                    display: block;
+                    margin: 0 auto;
+                }
+}
+
+@media (max-width: 880px) {
+    .logo h1 {
+        float: none;
+    }
+    .logo p {
+        float: none;
+
+    }
+    .logo a {
+        float: none;
+        width: auto;
+        border-bottom: 2px solid;
+
+    }
+}

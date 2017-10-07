@@ -124,6 +124,48 @@ body {
     padding: .5em;
     background-color: #fff;
 }
+
+    .post {
+        border-bottom: 1px solid #999;
+    }
+        .post_content,
+        .post_addition {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            padding: .5em;
+        }
+        .post_content {
+
+        }
+            .post_text {
+
+            }
+                .post_text h1 {
+
+                }
+                .post_text p {
+
+                }
+                .post_image img {
+                    box-shadow: 0 0 2px #222;
+                }
+        .post_addition {
+            justify-content: flex-start;
+        }
+            .post_addition p {
+                font-size: .8em;
+                color: #999;
+                margin-left: 1em;
+            }
+                .post_addition span {
+                    font-size: 1em;
+                    color: #222;
+                }
+
+
+/*
     .post {
         width: auto;
         margin: 0 auto;
@@ -152,7 +194,7 @@ body {
                 color: darkred;
                 font-style: italic;
             }
-
+*/
             /* form wrap */
     .form-wrap {
         margin: 0 auto;
