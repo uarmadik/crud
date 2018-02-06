@@ -30,9 +30,9 @@ class Controller_main extends Controller
 
         $view = new View();
         $view->generate('general','main_view.html.twig', ['posts'=>$posts,
-                                                                                   'sort'=>$this->order_by,
-                                                                                   'user'=>$user,
-                                                                                   'pages'=>$pages]);
+                                                          'sort'=>$this->order_by,
+                                                          'user'=>$user,
+                                                          'pages'=>$pages]);
     }
 
     public function order($order_param)
